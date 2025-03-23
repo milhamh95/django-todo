@@ -12,5 +12,14 @@
             {{todo.title}}
         {% endfor %}
     </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Input Title" id="title">
+        <textarea name="content" id="content" placeholder="Input Content"></textarea>
+        <button>
+            Create To Do
+        </button>
+    </form>
 </body>
 </html>

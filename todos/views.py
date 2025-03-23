@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from .models import Todo
 
@@ -10,3 +10,11 @@ class IndexView(View):
             "todos": todos,
         }
         return render(request, "index.html", context)
+    
+    def post(self, request):
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+
+        Todo.objects.create(title=title, content=content, user=request.user)
+
+        return redirect("index_view")
