@@ -6,6 +6,11 @@
     <title>List Todo</title>
 </head>
 <body>
-    <div>this is todo list</div>
+    <h1>this is todo list</h1>
+    <div>
+        {% for todo in todos %}
+            {{todo.title}}
+        {% endfor %}
+    </div>
 </body>
 </html>
