@@ -18,3 +18,8 @@ class IndexView(View):
         Todo.objects.create(title=title, content=content, user=request.user)
 
         return redirect("index_view")
+    
+class DetailView(View):
+    def get(self, request, id):
+        todo = Todo.objects.get(id = id)
+        return render(request, "detail.html", {'todo': todo})
