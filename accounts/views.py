@@ -15,7 +15,10 @@ class LoginView(View):
 
         if authenticated_user is None:
             print("Invalid credentials")
-            return redirect('login')
+            return render(
+                request,
+                'login.html',
+                {"error": "Invalid credentials"})
 
         login(request, authenticated_user)
         return redirect('todo_list')
