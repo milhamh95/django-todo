@@ -1,0 +1,11 @@
+{% extends 'base_todo.html' %}
+
+{% block todo_content %}
+    <h3>Todo Detail</h3>
+    {% if todo %}
+        <p>Title: {{ todo.title }}</p>
+        <p>Status: {% if todo.completed %}Completed{% else %}Not Completed{% endif %}</p>
+    {% else %}
+        <p>Todo not found</p>
+    {% endif %}
+{% endblock %}

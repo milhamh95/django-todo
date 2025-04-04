@@ -1,13 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'base_todo.html' %}
 
-{% block content %}
+{% block todo_content %}
     <header>
-        <h3>All Notes</h3>
-        <a>
-            <button>Create To Do</button>
-        </a>
+        <h1>{{ title }}</h1>
     </header>
     <main>
-        <p>this is todo list</p>
+        <div>
+            <h3>Create Todo</h3>
+            <a href="/todos/create/">Click to create todo</a>
+        </div>
+        <ul>
+            {% for todo in todos %}
+                <li>
+                    <a href="/todos/{{ todo.id }}">{{ todo.title }}</a>
+                    {% if todo.completed %}
+                        ✅
+                    {% endif %}
+                    <form action="{% url 'todo_delete' todo.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form action="{% url 'todo_update' todo.id %}" method="get" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Update</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
     </main>
 {% endblock %}
