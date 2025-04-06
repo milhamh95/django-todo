@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import View
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -25,6 +25,7 @@ class LoginView(View):
 
 class LogoutView(View):
     def get(self, request):
+        logout(request)
         return redirect('login')
 
 class RegisterView(View):
@@ -32,12 +33,24 @@ class RegisterView(View):
         return render(request, "register.html")
 
     def post(self, request):
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        password2 = request.POST.get('password2')
+        email = request.POST.get('email').strip()
+        first_name = request.POST.get('first_name').strip()
+        last_name = request.POST.get('last_name').strip()
+        username = request.POST.get('username').strip()
+        password = request.POST.get('password').strip()
+        password2 = request.POST.get('password2').strip()
+
+        if username is None or username == "":
+            return render(
+                request,
+                'register.html',
+                {"error": "Username is required"})
+
+        if password is None or password == "":
+            return render(
+                request,
+                'register.html',
+                {"error": "Password is required"})
 
         if password != password2:
             return render(
