@@ -22,20 +22,58 @@ class TodoDetailView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'id'
 
 
-class TodoCreateView(View):
+class TodoCreateView(LoginRequiredMixin, View):
+    login_url = '/login/'
     def get(self, request):
         return render(request, 'create.html')
 
     def post(self, request):
-        print("create todo")
+        title = request.POST.get('title').strip()
+        description = request.POST.get('description')
+
+        if not title:
+            return render(request, 'create.html', {'error': 'Title is required'})
+
+        if len(title) > 255:
+            return render(request, 'create.html', {'error': 'Title is too long'})
+
+        Todo.objects.create(
+            title=title,
+            description=description,
+            user=request.user,
+            status=Todo.Status.ACTIVE
+        )
+
         return redirect('todo_list')
 
-class TodoUpdateView(View):
+class TodoUpdateView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request, id):
-        return render(request, 'update.html')
+        todo = Todo.objects.get(id=id)
+        return render(request, 'update.html', {'todo': todo})
 
     def post(self, request, id):
-        print("update todo: ", id)
+        todo = Todo.objects.get(id=id)
+        title = request.POST.get('title').strip()
+        description = request.POST.get('description')
+
+        if not title:
+            return render(request, 'update.html', {
+                'todo': todo,
+                'error': 'Title is required'
+            })
+
+        if len(title) > 255:
+            return render(request, 'update.html', {
+                'todo': todo,
+                'error': 'Title is too long'
+            })
+
+        todo.title = title
+        todo.description = description
+        todo.save()
+
         return redirect('todo_list')
 
 class TodoDeleteView(LoginRequiredMixin, View):

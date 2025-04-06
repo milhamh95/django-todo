@@ -4,7 +4,9 @@
     <h3>Todo Detail</h3>
     {% if todo %}
         <p>Title: {{ todo.title }}</p>
+        <p>{{ todo.description|default:"No description" }}</p>
         <p>Status: {% if todo.completed %}Completed{% else %}Not Completed{% endif %}</p>
+        <p>Created at: {{ todo.created_at|date:"Y-m-d H:i:s" }}</p>
     {% else %}
         <p>Todo not found</p>
     {% endif %}
