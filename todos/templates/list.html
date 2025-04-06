@@ -24,6 +24,10 @@
                         {% csrf_token %}
                         <button type="submit">Update</button>
                     </form>
+                    <form action="{% url 'todo_complete' todo.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Complete</button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>

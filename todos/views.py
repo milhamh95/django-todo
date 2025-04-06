@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Todo
+from .tasks import todo_archived
 
 # Create your views here.
 class TodoListView(LoginRequiredMixin,ListView):
@@ -12,7 +13,7 @@ class TodoListView(LoginRequiredMixin,ListView):
     context_object_name = 'todos'
 
     def get_queryset(self):
-        return Todo.objects.filter(user=self.request.user)
+        return Todo.objects.filter(user=self.request.user, is_done=False)
 
 class TodoDetailView(LoginRequiredMixin, DetailView):
     login_url = '/login/'
@@ -76,13 +77,16 @@ class TodoUpdateView(LoginRequiredMixin, View):
 
         return redirect('todo_list')
 
-class TodoDoneView(LoginRequiredMixin, View):
+class TodoCompleteView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def post(self, request, id):
         todo = Todo.objects.get(id=id)
-        todo.status = Todo.Status.DONE
+        todo.is_done = True
         todo.save()
+
+        todo_archived(id)
+
         return redirect('todo_list')
 
 class TodoDeleteView(LoginRequiredMixin, View):
