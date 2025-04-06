@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'todos',
+    "huey.contrib.djhuey",
 ]
 
 MIDDLEWARE = [

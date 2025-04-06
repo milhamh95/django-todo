@@ -76,6 +76,15 @@ class TodoUpdateView(LoginRequiredMixin, View):
 
         return redirect('todo_list')
 
+class TodoDoneView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def post(self, request, id):
+        todo = Todo.objects.get(id=id)
+        todo.status = Todo.Status.DONE
+        todo.save()
+        return redirect('todo_list')
+
 class TodoDeleteView(LoginRequiredMixin, View):
     login_url = '/login/'
 
