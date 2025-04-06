@@ -15,7 +15,6 @@ class LoginView(View):
         authenticated_user = authenticate(request, username=username, password=password)
 
         if authenticated_user is None:
-            print("Invalid credentials")
             return render(
                 request,
                 'login.html',
