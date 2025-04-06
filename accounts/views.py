@@ -40,7 +40,6 @@ class RegisterView(View):
         password2 = request.POST.get('password2')
 
         if password != password2:
-            print("Passwords do not match")
             return render(
                 request,
                 'register.html',

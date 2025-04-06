@@ -1,10 +1,12 @@
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Todo
 
 # Create your views here.
-class TodoListView(ListView):
+class TodoListView(LoginRequiredMixin,ListView):
+    login_url = '/login/'
     model = Todo
     template_name = 'list.html'
     context_object_name = 'todos'
@@ -12,7 +14,8 @@ class TodoListView(ListView):
     def get_queryset(self):
         return Todo.objects.filter(user=self.request.user)
 
-class TodoDetailView(DetailView):
+class TodoDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
     model = Todo
     template_name = 'detail.html'
     context_object_name = 'todo'
@@ -35,8 +38,10 @@ class TodoUpdateView(View):
         print("update todo: ", id)
         return redirect('todo_list')
 
-class TodoDeleteView(View):
+class TodoDeleteView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def post(self, request, id):
-        print("delete todo: ", id)
+        Todo.objects.get(id=id).delete()
 
         return redirect('todo_list')
